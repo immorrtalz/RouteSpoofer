@@ -1,0 +1,52 @@
+{
+	"$schema": "https://schema.tauri.app/config/2",
+	"productName": "RouteSpoofer",
+	"identifier": "com.EVERMEDIAPROJECT.RouteSpoofer",
+	"version": "0.0.1",
+	"build":
+	{
+		"beforeDevCommand": "npm run dev",
+		"devUrl": "http://localhost:1420",
+		"beforeBuildCommand": "npm run build",
+		"frontendDist": "../dist"
+	},
+	"app":
+	{
+		"withGlobalTauri": true,
+		"windows": [
+			{
+				"title": "RouteSpoofer",
+				"label": "main",
+				"width": 460,
+				"height": 1000,
+				"x": 0,
+				"y": 0,
+				"visible": true
+			}
+		],
+		"security":
+		{
+			"csp": "asset: http://asset.localhost"
+		}
+	},
+	"bundle":
+	{
+		"active": true,
+		"android":
+		{
+			"autoIncrementVersionCode": true,
+			"minSdkVersion": 26
+		},
+		"targets": "all",
+		"publisher": "EVERMEDIA PROJECT",
+		"icon": [
+			"icons/32x32.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		],
+		"copyright": "EVERMEDIA PROJECT",
+		"category": "Utility"
+	}
+}
