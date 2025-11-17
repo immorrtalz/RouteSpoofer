@@ -13,6 +13,9 @@
 		"opener:default",
 		"geolocation:allow-check-permissions",
 		"geolocation:allow-request-permissions",
-		"geolocation:allow-get-current-position"
+		"geolocation:allow-get-current-position",
+		"android-mock-location:default",
+		"android-mock-location:allow-checkPermissions",
+		"android-mock-location:allow-requestPermissions"
 	]
 }

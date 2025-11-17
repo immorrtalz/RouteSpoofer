@@ -1,0 +1,45 @@
+.main
+{
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+	gap: 64px;
+}
+
+.h1
+{
+	font-size: 32px;
+	font-weight: 600;
+	color: var(--white-80);
+}
+
+.button
+{
+	width: fit-content;
+	height: 44px;
+	padding: 0 24px;
+	border-radius: 16px;
+	font-weight: 600;
+	background: var(--white-5);
+	color: var(--white-90);
+	border: 1px solid var(--white-15);
+
+	&:active
+	{
+		background: var(--white-15);
+		border: 1px solid var(--white-0);
+	}
+}
+
+.text
+{
+	max-width: 90vw;
+	color: var(--white-50);
+	overflow: hidden;
+	white-space: normal;
+	line-break: normal;
+}

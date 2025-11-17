@@ -3081,6 +3081,8 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-plugin",
+ "tauri-plugin-android-mock-location",
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
  "tauri-plugin-geolocation",
@@ -3800,6 +3802,17 @@ dependencies = [
  "tauri-utils",
  "toml 0.9.8",
  "walkdir",
+]
+
+[[package]]
+name = "tauri-plugin-android-mock-location"
+version = "0.1.0"
+source = "git+https://github.com/immorrtalz/tauri-plugin-android-mock-location#925d1fed45848ebe18a00db8dce84691c6fd468b"
+dependencies = [
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.17",
 ]
 
 [[package]]

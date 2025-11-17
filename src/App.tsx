@@ -1,51 +1,81 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { invoke, PermissionState } from "@tauri-apps/api/core";
+import styles from  "./App.module.scss";
+/* import checkPermissions from "tauri-plugin-android-mock-location-api"; */
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+type Location =
+{
+	lat: number;
+	lon: number;
+};
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+interface Permissions
+{
+	coarseLocation: PermissionState;
+	fineLocation: PermissionState;
+}
 
-  return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+const coords: Array<Location> = [
+	{ lat: 55.7558, lon: 37.6173 }, // Moscow
+	{ lat: 59.9343, lon: 30.3351 }, // St Petersburg
+];
 
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
+function App()
+{
+	const [consoleOutput, setConsoleOutput] = useState("Hi there!");
+	const [currentSpoofedLocation, setCurrentSpoofedLocation] = useState<Location | null>(null);
 
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
-  );
+	const checkPermissions = async (): Promise<boolean> =>
+	{
+		const permissions = await invoke<Permissions>('plugin:android-mock-location|checkPermissions');
+		var locationGranted = false;
+		var mockLocationProviderSet = false;
+
+		if (permissions.coarseLocation === 'granted' || permissions.fineLocation === 'granted') locationGranted = true;
+		else
+		{
+			const state = await invoke<Permissions>('plugin:android-mock-location|requestPermissions', { permissions: ['coarseLocation', 'fineLocation'] });
+			locationGranted = state.coarseLocation === 'granted' || state.fineLocation === 'granted';
+		}
+
+		mockLocationProviderSet = true;
+
+		return locationGranted && mockLocationProviderSet;
+	};
+
+	const startSpoofing = () =>
+	{
+		setConsoleOutput("Checking permissions...");
+
+		checkPermissions().then(granted =>
+		{
+			if (granted)
+			{
+				setCurrentSpoofedLocation(coords[0]);
+				setConsoleOutput("Started spoofing");
+			}
+			else if (currentSpoofedLocation !== null) stopSpoofing();
+		})
+		.catch(error => setConsoleOutput(`Error: ${error}`));
+	};
+
+	const stopSpoofing = () =>
+	{
+		setConsoleOutput("Stopped spoofing");
+		setCurrentSpoofedLocation(null);
+	};
+
+	return (
+		<main className={styles.main}>
+			<h1 className={styles.h1}>RouteSpoofer</h1>
+
+			<button className={styles.button} onClick={currentSpoofedLocation == null ? startSpoofing : stopSpoofing}>
+				{currentSpoofedLocation == null ? "Start" : "Stop"} spoofing
+			</button>
+
+			<p className={styles.text}>{consoleOutput}</p>
+		</main>
+	);
 }
 
 export default App;
